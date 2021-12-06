@@ -12,7 +12,9 @@ class ProductViewSet(ModelViewSet):
     # при необходимости добавьте параметры фильтрации
 
     filter_backends = [SearchFilter]
-    search_fields = ["title"]
+    search_fields = ["title", "description"]
+
+    pagination_class = LimitOffsetPagination
 
 
 class StockViewSet(ModelViewSet):
@@ -23,7 +25,7 @@ class StockViewSet(ModelViewSet):
         queryset = Stock.objects.all()
         product_name = self.request.query_params.get("products")
         if product_name is not None:
-            queryset = queryset.filter(products__title__istartswith=product_name)
+            queryset = queryset.filter(products__title__icontains=product_name)
         return queryset
 
     pagination_class = LimitOffsetPagination
